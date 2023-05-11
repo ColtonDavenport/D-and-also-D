@@ -9,17 +9,24 @@ const App = () => {
   const [spell, setSpell] = React.useState({});
 
   React.useEffect( () => { 
+    updateSelectedSpell("acid-arrow");
+  }, []);
+
+  function updateSelectedSpell (spellIndex) {
     (async () => {
-      let spellDetails = await fetchSpellDetails("acid-arrow");
+      let spellDetails = await fetchSpellDetails(spellIndex);
       setSpell(spellDetails);
     }) ();
- }, []);
+  }
+  function dropdownChange (event) {
+    updateSelectedSpell(event.target.value);
+  }
 
   if(spell != undefined){
     return (
       <React.Fragment>
 
-        <SpellSelector />
+        <SpellSelector onChange={dropdownChange} />
         <div> {spell.name}</div>
 
       </React.Fragment>

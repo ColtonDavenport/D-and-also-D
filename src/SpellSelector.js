@@ -1,9 +1,9 @@
 import React from 'react';
 
 
-const SpellSelector = () => {
+const SpellSelector = ({onChange}) => {
     return (
-        <select> 
+        <select onChange={onChange}> 
             <option value="acid-arrow"> Acid Arrow</option>
             <option value="true-strike"> True Strike</option>
             <option value="magic-missile"> Magic Missile</option>

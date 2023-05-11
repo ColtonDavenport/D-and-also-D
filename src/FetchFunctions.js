@@ -5,7 +5,7 @@ export async function fetchSpellDetails (spellIndex) {
     if(!response.ok) {
       throw Error(response.status + ": " + response.statusText);
     }
-    return await response.json();
+    return await response.json(); 
   } catch (error) {
     console.log('Fetch API Error: ' + error )
   }   
