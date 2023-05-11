@@ -1,12 +1,21 @@
 import React from 'react';
 
 
-const SpellSelector = ({onChange}) => {
+const SpellSelector = ({onChange, spellList}) => {
+    //console.log(spellList);
+    if(spellList === undefined) {
+        return (
+            <select> 
+                <option> loading List </option>
+            </select>
+        )
+    }
+    console.log("howdy",spellList)
     return (
         <select onChange={onChange}> 
-            <option value="acid-arrow"> Acid Arrow</option>
-            <option value="true-strike"> True Strike</option>
-            <option value="magic-missile"> Magic Missile</option>
+            {
+                spellList.map(spell => <option key={spell.index} value={spell.index}>{spell.name}</option>)
+            }
         </select>
     )
 }

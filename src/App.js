@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import SpellSelector from './SpellSelector';
-import { fetchSpellDetails } from './FetchFunctions';
+import { fetchSpellDetails, fetchSpellList } from './FetchFunctions';
 
 const DEFAULT_SPELL_INDEX = "acid-arrow";
 
@@ -19,13 +19,20 @@ let loadedSpells = {};
 
 const App = () => {
   const [spell, setSpell] = React.useState({});
+  const [spellList, setSpellList] = React.useState([]);
 
-  React.useEffect( () => { 
+
+  React.useEffect( () => {
+    updateSpellList();
     updateSelectedSpell(DEFAULT_SPELL_INDEX);
   }, []);
 
-  function updateSelectedSpell (spellIndex) {
-    (async () => {
+  async function updateSpellList() {
+    let newSpellList = await fetchSpellList();
+    setSpellList(newSpellList.results);
+  }
+
+  async function updateSelectedSpell (spellIndex) {
       let spellDetails;
 
       if (loadedSpells[spellIndex] === undefined ) {
@@ -37,9 +44,8 @@ const App = () => {
       }
       
       setSpell(spellDetails);
-    }) ();
   }
-  
+
   function dropdownChange (event) {
     updateSelectedSpell(event.target.value);
   }
@@ -48,7 +54,7 @@ const App = () => {
     return (
       <React.Fragment>
 
-        <SpellSelector onChange={dropdownChange} />
+        <SpellSelector onChange={dropdownChange} spellList={spellList}/>
         <div> {spell.name}</div>
 
       </React.Fragment>
