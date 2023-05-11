@@ -2,26 +2,20 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import SpellSelector from './SpellSelector';
+import { fetchSpellDetails } from './FetchFunctions';
+
 
 const App = () => {
   const [spell, setSpell] = React.useState({});
 
-  React.useEffect( () => {
+  React.useEffect( () => { 
     (async () => {
-      try {
-        const response = await fetch("https://www.dnd5eapi.co/api/spells/acid-arrow");
-        if(!response.ok) {
-          throw Error(response.status + ": " + response.statusText);
-        }
-        const result = await response.json();
-        setSpell(result);
-      } catch (error) {
-        console.log('Fetch API Error: ' + error )
-      }
+      let spellDetails = await fetchSpellDetails("acid-arrow");
+      setSpell(spellDetails);
     }) ();
-  }, []);
+ }, []);
 
-  if(spell.index != undefined){
+  if(spell != undefined){
     return (
       <React.Fragment>
 
