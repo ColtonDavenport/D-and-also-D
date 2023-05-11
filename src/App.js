@@ -4,20 +4,42 @@ import './App.css';
 import SpellSelector from './SpellSelector';
 import { fetchSpellDetails } from './FetchFunctions';
 
+const DEFAULT_SPELL_INDEX = "acid-arrow";
+
+/*
+ * Object Name: loaded Spells
+ * Purpose:
+ *   This object will act like a dictionary to save information 
+ *   about spells as they are loaded. This will help reduce how
+ *   many calls to the dndAPI have to be made and in turn speed
+ *   up the program.
+*/
+let loadedSpells = {};
+
 
 const App = () => {
   const [spell, setSpell] = React.useState({});
 
   React.useEffect( () => { 
-    updateSelectedSpell("acid-arrow");
+    updateSelectedSpell(DEFAULT_SPELL_INDEX);
   }, []);
 
   function updateSelectedSpell (spellIndex) {
     (async () => {
-      let spellDetails = await fetchSpellDetails(spellIndex);
+      let spellDetails;
+
+      if (loadedSpells[spellIndex] === undefined ) {
+        spellDetails = await fetchSpellDetails(spellIndex);
+        loadedSpells[spellIndex] = spellDetails;
+      }
+      else {
+        spellDetails = loadedSpells[spellIndex];
+      }
+      
       setSpell(spellDetails);
     }) ();
   }
+  
   function dropdownChange (event) {
     updateSelectedSpell(event.target.value);
   }
@@ -37,46 +59,5 @@ const App = () => {
   )
 
 }
-
-
-// class App extends Component {
-
-//   constructor(props){
-//     super(props);
-
-//     this.state = {
-//       spell: {},
-//       isLoaded: false
-//     };
-//   }
-
-//   componentDidMount() {
-//     fetch('https://www.dnd5eapi.co/api/spells/acid-arrow')
-//       .then(res => res.json())
-//       .then(json => {
-//         this.setState = {
-//           isLoaded: true,
-//           spell: json
-//         }
-//         console.log(this.state.isLoaded);
-//       });
-//   }
-
-//   render() {
-
-//     let {isLoaded, spell} = this.state;
-//     if (!isLoaded) return (
-//       <div className="App">
-//         waiting to load
-//       </div>
-//     )
-
-//     return (
-//       <div className="App">
-//         loaded
-//       </div>
-//     )
-//   }
-// }
 
 export default App;
