@@ -1,3 +1,11 @@
+# Shaking the dust off
+
+Getting back into the habit of programming with this simple project.
+
+This will be a single page that connects to a dnd 5e api, lists some abilities, and then allow the user to select and use an ability. That means rolling every die needed for that ability.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
