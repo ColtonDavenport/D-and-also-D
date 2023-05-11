@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import SpellSelector from './SpellSelector';
 
 const App = () => {
   const [spell, setSpell] = React.useState({});
@@ -23,7 +23,12 @@ const App = () => {
 
   if(spell.index != undefined){
     return (
-      <div> {spell.name}</div>
+      <React.Fragment>
+
+        <SpellSelector />
+        <div> {spell.name}</div>
+
+      </React.Fragment>
     )
   }
   return (
