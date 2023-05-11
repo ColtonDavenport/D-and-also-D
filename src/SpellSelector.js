@@ -2,7 +2,6 @@ import React from 'react';
 
 
 const SpellSelector = ({onChange, spellList}) => {
-    //console.log(spellList);
     if(spellList === undefined) {
         return (
             <select> 
@@ -10,7 +9,6 @@ const SpellSelector = ({onChange, spellList}) => {
             </select>
         )
     }
-    console.log("howdy",spellList)
     return (
         <select onChange={onChange}> 
             {
