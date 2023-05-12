@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import SpellSelector from './SpellSelector';
 import { fetchSpellDetails, fetchSpellList } from './FetchFunctions';
+import SpellBlock from './SpellBlock';
 
 const DEFAULT_SPELL_INDEX = "acid-arrow";
 
@@ -55,7 +56,7 @@ const App = () => {
       <React.Fragment>
 
         <SpellSelector onChange={dropdownChange} spellList={spellList}/>
-        <div> {spell.name}</div>
+        <SpellBlock details={spell} />
 
       </React.Fragment>
     )
