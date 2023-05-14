@@ -3,7 +3,9 @@ import DamageRoller from './DamageRoller';
 import {HigherLevel, SpellLevel} from './Levels';
 
 
+
 const SpellBlock = ({details}) => {
+
     if(details.desc === undefined) {
         return (
             <div>

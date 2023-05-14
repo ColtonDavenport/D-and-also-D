@@ -1,10 +1,19 @@
 import React from 'react';
 
-
-class DamageRoll {
+const SLOT_SELECT_ID = "slotSelect"
+const ROLL_RESULTS_ID = "rollResults"
+class DamageDice {
     constructor(numberOfDice, diceType){
-        this.numberOfDice = numberOfDice;
-        this.diceType = diceType;
+        this.numberOfDice = parseInt(numberOfDice);
+        this.diceType = parseInt(diceType);
+    }
+    
+    Roll() {
+        let results = "";
+        let total = 0;
+        for(let i = 0; i < this.numberOfDice; i++){
+            total += Math.floor(1 + Math.random() * this.diceType);
+        }
     }
 }
 
@@ -22,10 +31,11 @@ function parseDamageLevels (damage) {
 
         for(let i = firstKey; i <= 9; i++){
             let level = i.toString();
-            let damageAmount = damage.damage_at_slot_level[level];
+            // let diceArray = damage.damage_at_slot_level[level].split('d');
+            // let damageDice = new DamageDice(diceArray[0],diceArray[1]);
             levelDamages.push({
                 level: level,
-                damage: damageAmount
+                damageDice: damage.damage_at_slot_level[level]
             })
         }
 
@@ -36,19 +46,41 @@ function parseDamageLevels (damage) {
     return [levelString, levelDamages];
 }
 
+
+function RollDamage () {
+    let damageString = document.getElementById(SLOT_SELECT_ID).value;
+    let [numDice, diceType] = damageString.split('d').map(e => parseInt(e)); // parse a string like "4d6"
+    
+    let results = damageString + " = ";
+    let total = 0;
+    for(let i = 0; i < numDice; i++){
+        let roll = Math.floor(1 + Math.random() * diceType);
+        total += roll;
+        results += roll + " ";
+        if(i != numDice -1)
+            results += "+ "
+    }
+    results += "= " + total;
+
+    let resultsDiv = document.getElementById(ROLL_RESULTS_ID);
+    resultsDiv.innerHTML = results;    
+}
+
 const DamageRoller = ({damage}) => {
     if(damage === undefined) return null;
 
     //create an array for possible damage values, 
-    let [levelString, levelDamages] = parseDamageLevels(damage)
+    let [levelString, levelDamages] = parseDamageLevels(damage);
+    console.log(levelDamages[0])
     return (
         <React.Fragment>
-            <label htmlFor="slotSelect">{levelString}: </label>
-            <select id="slotSelect">
-                {levelDamages.map(slot => <option key={"lvlDmg"+slot.level} value={slot.damage}>{slot.level}</option>)}
+            <label htmlFor={SLOT_SELECT_ID}>{levelString}: </label>
+            <select id={SLOT_SELECT_ID}>
+                {levelDamages.map(slot => <option key={"lvlDmg"+slot.level} value={slot.damageDice}>{slot.level}</option>)}
             </select>
+            <button onClick={RollDamage}> Roll For Damage</button>
+            <div id={ROLL_RESULTS_ID}></div>
         </React.Fragment>
-
     )
 }
 
