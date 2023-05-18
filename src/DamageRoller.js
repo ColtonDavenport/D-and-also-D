@@ -1,21 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const SLOT_SELECT_ID = "slotSelect"
 const ROLL_RESULTS_ID = "rollResults"
-class DamageDice {
-    constructor(numberOfDice, diceType){
-        this.numberOfDice = parseInt(numberOfDice);
-        this.diceType = parseInt(diceType);
-    }
-    
-    Roll() {
-        let results = "";
-        let total = 0;
-        for(let i = 0; i < this.numberOfDice; i++){
-            total += Math.floor(1 + Math.random() * this.diceType);
-        }
-    }
-}
+const DAMAGE_PREVIEW_ID = "damagePreview"
 
 function parseDamageLevels (damage) {
     let levelString = "";
@@ -39,8 +26,16 @@ function parseDamageLevels (damage) {
             })
         }
 
-    } else {
+    } else if (damage.damage_at_character_level !== undefined){
         levelString = "Character Level"
+        const numberOfSlots = Object.keys(damage.damage_at_character_level).length;
+        for( const [level, damageDice] of Object.entries(damage.damage_at_character_level)){
+            levelDamages.push({
+                level: level,
+                damageDice: damageDice
+            });
+        }
+
     }
 
     return [levelString, levelDamages];
@@ -66,7 +61,30 @@ function RollDamage () {
     resultsDiv.innerHTML = results;    
 }
 
+function UpdateDamagePreview(event) {
+        const preview = document.getElementById(DAMAGE_PREVIEW_ID);
+        preview.innerHTML = event.target.value;
+}
+
 const DamageRoller = ({damage}) => {
+
+    useEffect(() => {
+        const select = document.getElementById(SLOT_SELECT_ID);
+        const results = document.getElementById(ROLL_RESULTS_ID);
+        const preview = document.getElementById(DAMAGE_PREVIEW_ID);
+
+        if(select === null)
+            return;
+        select.selectedIndex = "0";
+
+        results.innerHTML = "";
+        console.log(damage);
+        
+        preview.innerHTML = select.value;
+        
+        
+    });
+
     if(damage === undefined) return null;
 
     //create an array for possible damage values, 
@@ -75,10 +93,11 @@ const DamageRoller = ({damage}) => {
     return (
         <React.Fragment>
             <label htmlFor={SLOT_SELECT_ID}>{levelString}: </label>
-            <select id={SLOT_SELECT_ID}>
+            <select id={SLOT_SELECT_ID} onChange={UpdateDamagePreview}>
                 {levelDamages.map(slot => <option key={"lvlDmg"+slot.level} value={slot.damageDice}>{slot.level}</option>)}
             </select>
-            <button onClick={RollDamage}> Roll For Damage</button>
+            <button onClick={RollDamage}> Roll For Damage: </button>
+            <div id={DAMAGE_PREVIEW_ID}></div>
             <div id={ROLL_RESULTS_ID}></div>
         </React.Fragment>
     )
